@@ -29,7 +29,10 @@ def read_page(url, session=None):
 
 
 def amount(text):
-    cleaned = re.sub(r'[^0-9.,]', '', text).replace(',', '')
+    match = re.fullmatch(r'\s*[£$]?\s*(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d{1,2})?\s*', text)
+    if not match:
+        raise ValueError('Price format is ambiguous or unsupported.')
+    cleaned = re.sub(r'[^0-9.]', '', text)
     try:
         value = Decimal(cleaned)
     except InvalidOperation as error:
@@ -101,6 +104,6 @@ def csv_export(records):
     writer = csv.DictWriter(output, fieldnames=columns)
     writer.writeheader()
     for record in records:
-        safe = {k: ("'" + v if isinstance(v, str) and v[:1] in '=+-@' else v) for k, v in record.items() if k in columns}
+        safe = {k: ("'" + v if isinstance(v, str) and v.lstrip()[:1] and v.lstrip()[:1] in '=+-@' else v) for k, v in record.items() if k in columns}
         writer.writerow(safe)
     return output.getvalue()

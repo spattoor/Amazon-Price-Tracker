@@ -2,7 +2,7 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'deploy'))
 import unittest
-from prices import normalize_asin, parse_books, parse_amazon, csv_export
+from prices import normalize_asin, parse_books, parse_amazon, csv_export, amount
 
 
 class PricesTest(unittest.TestCase):
@@ -28,6 +28,11 @@ class PricesTest(unittest.TestCase):
     def test_csv_formula_injection_escaped(self):
         csv = csv_export([{'title':'=HYPERLINK("bad")', 'price': 12.3, 'currency':'GBP'}])
         self.assertIn("'=HYPERLINK",csv)
+        self.assertIn("'\t=SUM", csv_export([{'title':'\t=SUM(1,2)'}]))
+
+    def test_negative_and_ambiguous_prices_are_rejected(self):
+        for text in ['$-9.99', '$19.99 - $24.99', '£12,34', 'free', '£0.00']:
+            with self.assertRaises(ValueError): amount(text)
 
 
 if __name__ == '__main__': unittest.main()

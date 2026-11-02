@@ -38,7 +38,7 @@ On Windows activate with `.venv\Scripts\activate`. No account, browser driver, o
 python -m unittest discover -s tests -v
 ```
 
-Five tests cover fixed-domain input validation, fractional prices and currency, source provenance, unavailable data, and CSV formula escaping. Fetches have connection/read timeouts, a two-MiB response cap, no redirects, and a ten-minute cache. Duplicate observations are not appended twice within a session.
+Six tests cover fixed-domain input validation, fractional prices and currency, source provenance, unavailable data, and CSV formula escaping (including leading whitespace), and rejection of negative or ambiguous prices. Fetches have connection/read timeouts, a two-MiB response cap, no redirects, and a ten-minute cache. Duplicate observations are not appended twice within a session.
 
 ## Deployment
 
