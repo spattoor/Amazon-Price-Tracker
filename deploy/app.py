@@ -85,7 +85,7 @@ st.subheader('Your observation log')
 st.caption('Session-only storage. Reloading, closing the session, or restarting the app may clear it. Download the CSV to retain your records. No background monitoring or email alerts are claimed.')
 history = st.session_state.observations
 if history:
-    st.dataframe(pd.DataFrame(history), hide_index=True, use_container_width=True)
+    st.dataframe(pd.DataFrame(history), hide_index=True, width='stretch')
     st.download_button('Download observations (.csv)', csv_export(history), file_name='price-observations.csv', mime='text/csv')
     if product_rows := [r for r in history if records and r['url'] == product['url']]:
         if len(product_rows) > 1:
